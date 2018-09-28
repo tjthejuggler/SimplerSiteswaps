@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public boolean siteswapHasCollisions(List<Integer> siteswapAsAnArrayOfInts){
         Boolean hasCollisions = false;
+        //todo: we need to go through each int in the list and mod it by the number of ints in the list,
+        //todo: then we make sure each of these results is unique
         return hasCollisions;
     }
 }
