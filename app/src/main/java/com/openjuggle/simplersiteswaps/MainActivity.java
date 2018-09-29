@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewResults;
     Button buttonGenerate;
     Button buttonSettings;
+
+    Integer numberOfSiteswapsPerObjectNumber = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (inputIsValid()) {
+                    //POSSIBLE SETTINGS:
+                    //  -Number of objects to use, this can be a list, like 2,3,4,5
+                    //      OR   just make a setting that is include siteswaps with same number of objects as the target,
+                    //              and no matter what include 2 and higher up to the point that is the target siteswap
+
+                    //todo: watch tutorial on using the menu, and make my own
+                    //todo:instead of printing valid or not valid, use a randomizer to make
+                    //todo:    other siteswaps, we can a lso use the functions we already have to verify them, and we can make some globals
+                    //// TODO: 9/29/2018  that are our settings which can eventually be user defined
+                    // TODO: 9/29/2018 2b siteswaps can use 1s, but only if they need to
+                    // TODO: 9/29/2018 practice siteswaps should have at least 2 digits exactly sequencially the same as the input siteswap
+                    //if 645 is input, then to make practices, we cycle through coming up with siteswaps that
+                    //  begin with 64, 45, and 56, we want to come up with 2b siteswaps for each of those
+
+                    //TO MAKE 2b SITESWAPS:
+                    //we take the target, get all of its 2-length components, and then figure out what must be put after
+                    //  them to make symetrical siteswaps. the the component adds up to an odd number, then we will need to also use a 1
+                    //  also, some even number siteswaps may need a 2 in order to make them symetric, for instance 531 has 53002
+                    //  it also has 312, and it has 150
+
+                    //TO MAKE 3B SITESWAPS:
+                    //  get all the 3 length compontents, if the component % 3 = 0, try adding the appropriate number of 0s to the end of it
+                    //      to make it divide out to 3 balls(this may be best done with numberOfObjectsForSiteswap)
                     textViewResults.setText("Valid");
                 } else {
                     textViewResults.setText("Not Valid");
@@ -66,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean siteswapIsValid(String siteswapToCheck){
         Boolean isValid = true;
         List<Integer> siteswapAsAnArrayOfInts = convertSiteswapToArrayOfInts(siteswapToCheck);
-        if (!siteswapHasWholeNumberOfObjects(siteswapAsAnArrayOfInts)){
+        if (numberOfObjectsForSiteswap(siteswapAsAnArrayOfInts)==-1){
             isValid = false;
         }
         if (isValid){
@@ -87,21 +114,27 @@ public class MainActivity extends AppCompatActivity {
         }
         return siteswapAsArrayOfInts;
     }
-    public boolean siteswapHasWholeNumberOfObjects(List<Integer> siteswapAsAnArrayOfInts){
-        Boolean hasWholeNumberOfObjects = true;
+    public int numberOfObjectsForSiteswap(List<Integer> siteswapAsAnArrayOfInts){
+        int numberOfObjects = -1;
         int sumOfSiteswapInts = 0;
         for (int i: siteswapAsAnArrayOfInts) {
             sumOfSiteswapInts += i;
         }
-        if (sumOfSiteswapInts % siteswapAsAnArrayOfInts.size() != 0) {
-            hasWholeNumberOfObjects = false;
+        if (sumOfSiteswapInts % siteswapAsAnArrayOfInts.size() == 0) {
+            numberOfObjects = sumOfSiteswapInts/siteswapAsAnArrayOfInts.size();
         }
-        return hasWholeNumberOfObjects;
+        return numberOfObjects;
     }
     public boolean siteswapHasCollisions(List<Integer> siteswapAsAnArrayOfInts){
         Boolean hasCollisions = false;
-        //todo: we need to go through each int in the list and mod it by the number of ints in the list,
-        //todo: then we make sure each of these results is unique
+        List<Integer> arrayOfModResults = new ArrayList<>();
+         for (int i = 0; i < siteswapAsAnArrayOfInts.size(); i++) {
+             arrayOfModResults.add((siteswapAsAnArrayOfInts.get(i) + i)%siteswapAsAnArrayOfInts.size());
+         }
+        Set<Integer> setOfModResults = new HashSet<>(arrayOfModResults);
+        if(setOfModResults.size() < arrayOfModResults.size()){
+            hasCollisions = true;
+        }
         return hasCollisions;
     }
 }
