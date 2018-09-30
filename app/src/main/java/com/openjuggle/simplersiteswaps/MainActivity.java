@@ -1,8 +1,11 @@
 package com.openjuggle.simplersiteswaps;
 
+import android.content.Context;
 import android.support.v4.math.MathUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextUserInput;
     TextView textViewResults;
     Button buttonGenerate;
-    Button buttonSettings;
 
     Integer numberOfSiteswapsPerObjectNumber = 10;
 
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         editTextUserInput = (EditText) findViewById(R.id.editText_siteswap);
         textViewResults = (TextView) findViewById(R.id.textView_results);
         buttonGenerate = (Button) findViewById(R.id.button_generate);
-        buttonSettings = (Button) findViewById(R.id.button_settings);
 
         buttonGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +57,18 @@ public class MainActivity extends AppCompatActivity {
                     //  them to make symetrical siteswaps. the the component adds up to an odd number, then we will need to also use a 1
                     //  also, some even number siteswaps may need a 2 in order to make them symetric, for instance 531 has 53002
                     //  it also has 312, and it has 150
+                    //STEP BY STEP:
+                    //  Split siteswap into 2 digit components
+                    //  For each component:
+                    //      add them together to determine if even or odd,
+                    //      IF EVEN - divide by 2, subtract 2, add that many 0s, then add a 2
+                    //      IF ODD, AND LOW DIGIT ODD/FIRST  - add as many 0s as needed to put a 1 at the catch of the lower number, follow that by a 2,
+                    //                          follow that with a 02 as many times as needed to make a 2b siteswap
+                    //      IF ODD, AND LOW DIGIT ODD/SECOND  - add as many 0s as needed to put a 1 at the catch of the lower number, follow that by a 2,
+                    //                          follow that with a 02 as many times as needed to make a 2b siteswap, then add another 2 on the end
+                    //  if ODD, add on the number of 0s needed to be able to put a catch
+
+                    //
 
                     //TO MAKE 3B SITESWAPS:
                     //  get all the 3 length compontents, if the component % 3 = 0, try adding the appropriate number of 0s to the end of it
@@ -136,5 +149,22 @@ public class MainActivity extends AppCompatActivity {
             hasCollisions = true;
         }
         return hasCollisions;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int menuItemThatWasSelected = item.getItemId();
+        if (menuItemThatWasSelected == R.id.action_settings){
+            Context context = MainActivity.this;
+            String message = "Settings clicked";
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

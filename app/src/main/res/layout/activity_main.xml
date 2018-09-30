@@ -15,21 +15,7 @@
         android:layout_marginTop="8dp"
         android:text="Generate"
         android:textSize="10sp"
-        app:layout_constraintEnd_toStartOf="@+id/button_settings"
         app:layout_constraintStart_toEndOf="@+id/editText_siteswap"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_settings"
-        android:layout_width="87dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Settings"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_generate"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
