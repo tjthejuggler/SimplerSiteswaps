@@ -65,11 +65,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void fillResultsTextViewWithResults(String userInput){
-
         String resultsString = "";
         String userInputDoubled = userInput+userInput;
         List<String> listOfComponents = new ArrayList<>();
+        List<String> digitsThatCanBeInSiteswaps = new ArrayList<>();
+        digitsThatCanBeInSiteswaps.add("0");
+        digitsThatCanBeInSiteswaps.add("2");
         for (int charToBeginComponentAt = 0; charToBeginComponentAt<userInput.length();charToBeginComponentAt++){
+            if (!digitsThatCanBeInSiteswaps.contains(userInput.substring(charToBeginComponentAt,charToBeginComponentAt+1))) {
+                digitsThatCanBeInSiteswaps.add(userInput.substring(charToBeginComponentAt,charToBeginComponentAt+1));
+            }
             for (int componentLength = 2; componentLength < userInput.length();componentLength++){
                 String componentToPossiblyAddToList = userInputDoubled.substring(charToBeginComponentAt,charToBeginComponentAt+componentLength);
                 Log.d(TAG, "fillResultsTextViewWithResults: "+componentToPossiblyAddToList);
@@ -79,22 +84,43 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         //      ONCE we have all the components, then we check to see if any of them are valid siteswaps, if they are valid siteswaps, we add them to
         //          a list of valid siteswaps,
+        String thisComponent = "";
+        String thisComponentWithExtraDigits = "";
+        int maxNumberOfIterations = 2;
+        //we cycle through each component
+        for (int componentIndex = 0; componentIndex<listOfComponents.size();componentIndex++) {
+            thisComponent = listOfComponents.get(componentIndex);
+            thisComponentWithExtraDigits = thisComponent;
+            for (int numberOfIterations = 0; numberOfIterations <= maxNumberOfIterations; numberOfIterations++) {
+                for (int currentIteration = 0; currentIteration < numberOfIterations; currentIteration++) {
+                    for (int indexOfDigitToAdd = 0; indexOfDigitToAdd < digitsThatCanBeInSiteswaps.size(); indexOfDigitToAdd++){
 
-        for (int i = 0; i<listOfComponents.size();i++) {
-            if (siteswapIsValid(listOfComponents.get(i))) {
-                resultsString += listOfComponents.get(i);
-                resultsString += "\n";
+                        thisComponentWithExtraDigits = thisComponent + digitsThatCanBeInSiteswaps.get(indexOfDigitToAdd);
+                        Log.d(TAG, "thisComponentWithExtraDigits: "+thisComponentWithExtraDigits);
+                        if (siteswapIsValid(thisComponentWithExtraDigits)) {
+                            resultsString += thisComponentWithExtraDigits;
+                            resultsString += "\n";
+                        }
+                    }
+
+
+                }
+
             }
+        }
+
+
+
+
+
+
+
 
             //      AFTER THAT, we go through each one and put all combinations of the numbers in the target siteswap(and 0,2), and check to see if each of those
             //          is a valid siteswap, adding them to a list of valid siteswaps as we go.
 
-
-
-        }
 
 
         //      WE CAN sort them into different lists based on their number of objects afterwards.
